@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.learn.mapper.CustomerMapper">
+	<select id="findCustomerByNameAndJobs"
+		parameterType="com.learn.pojo.Customer"
+		resultType="com.learn.pojo.Customer">
+		select * from customer
+		<where>
+			<if test="name != null and name != ''">
+				and name like concat('%',#{name},'%')
+			</if>
+			<if test="jobs != null and jobs != ''">
+				and jobs=#{jobs}
+			</if>
+		</where>
+	</select>
+	<select id="findCustomerByNameOrJobs"
+		parameterType="com.learn.pojo.Customer"
+		resultType="com.learn.pojo.Customer">
+		select * from customer
+		<trim prefix="where" prefixOverrides="and">
+			<choose>
+				<when test="name!=null and name!=''">
+					and name like concat('%',#{name},'%')
+				</when>
+				<when test="jobs!=null and jobs!=''">
+					and jobs=#{jobs}
+				</when>
+				<otherwise>
+					and phone is not null
+				</otherwise>
+			</choose>
+		</trim>
+	</select>
+	<update id="updateCus" parameterType="com.learn.pojo.Customer">
+		update customer
+		<set>
+			<if test="name != null and name != ''">
+				name=#{name},
+			</if>
+			<if test="jobs != null and jobs != ''">
+				jobs=#{jobs},
+			</if>
+			<if test="phone!=null and phone !=''">
+				phone=#{phone},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	<select id="findCustomerByIds" parameterType="List"
+		resultType="com.learn.pojo.Customer">
+		select * from customer where id in
+		<foreach item="id" index="index" collection="list" open="("
+			separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+	<select id="findCusByName"
+		parameterType="com.learn.pojo.Customer"
+		resultType="com.learn.pojo.Customer">
+		<bind name="pattern_name"
+			value="'%'+_parameter.getName()+'%'" />
+		select * from customer where name like #{pattern_name}
+	</select>
+</mapper>

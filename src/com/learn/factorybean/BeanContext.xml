@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd 
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd 
+						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd ">
+			 <bean id="userDao" class="com.learn.JDK.DaoImpl"/>
+			 <bean id="myAspect" class="com.learn.factorybean.MyAspect"/>
+			 <!-- 1.spring define a Proxy object -->
+			 <bean id="daoProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+			 <!-- 2.direct proxy interface -->
+			 <property name="proxyInterfaces" value="com.learn.JDK.UserDao"></property>
+			 <!-- 3.direct target object -->
+			 <property name="target" ref="userDao" ></property>
+			 <!-- 4.direct aop -->
+			 <property name="interceptorNames" value="myAspect"></property>
+			 <!-- 5.direct method -->
+			 <property name="proxyTargetClass" value="true"></property>
+			 </bean>
+</beans>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.learn.mapper.PersonMapper">
+	<select id="findPersonByID" parameterType="Integer"
+		resultMap="IDcardWithPerson">
+		select * from person where id=#{id}
+	</select>
+	<resultMap type="Person" id="IDcardWithPerson">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="age" column="age" />
+		<result property="sex" column="sex" />
+		<association property="card" column="card_id"
+			javaType="IDcard" select="com.learn.mapper.IDcardMapper.findCodeByID" />
+	</resultMap>
+	<select id="findPersonByIDas" parameterType="Integer"
+		resultMap="IDcardWithPersonResult">
+		select p.*, i.code from person p, idcard i where
+		p.card_id=i.id and p.id=#{id}
+	</select>
+	<resultMap type="Person" id="IDcardWithPersonResult">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="age" column="age" />
+		<result property="sex" column="sex" />
+		<association property="card" javaType="IDcard">
+			<id property="id" column="card_id" />
+			<result property="code" column="code" />
+		</association>
+	</resultMap>
+</mapper>
